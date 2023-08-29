@@ -1,0 +1,27 @@
+summary: Fetch tabCustomer
+tasks:
+  - id: mysql_tabcustomer_one
+    fn: com.gs.datastore
+    args:
+      datasource: mysql
+      data:
+        where:
+          name: <% inputs.params.name %> 
+      config:
+        method: tabCustomer.findUnique
+  - id: get_id_fullname
+    fn: com.gs.transform
+    args:
+      data: |
+        <js%
+          let op = {"full_name" : outputs.mysql_tabcustomer_one.data.full_name,"idx":outputs.mysql_tabcustomer_one.data.idx}
+          if (inputs.query.fields) {
+            const requestedFields = inputs.query.fields.split(',');
+            for (const field of requestedFields) {
+              if (outputs.mysql_tabcustomer_one.data.hasOwnProperty(field)) {
+                op[field] = outputs.mysql_tabcustomer_one.data[field];
+              }
+            }
+          }
+          return op
+        %>

@@ -1,0 +1,54 @@
+# summary: Fetch many tabTransaction
+# tasks:
+#   - id: mysql_tabtransaction_search
+#     fn: com.gs.datastore
+#     args:
+#       datasource: mysql
+#       data: <% inputs.body %>
+#       config:
+#         method: tabTransaction.findMany
+
+
+summary: Fetch many tabTransaction
+tasks:
+  - id: all_transactions_op
+    fn: com.gs.datastore
+    args:
+      datasource: mysql
+      data: <% inputs.body %>
+      config:
+        method: tabTransaction.findMany
+  - id: get_all_id_customer
+    fn: com.gs.transform
+    args:
+      data: |
+        <js%
+        const filteredTransactions = [];
+        const limitStart = parseInt(inputs.query.limit_start) || 0;
+        const limitLength = parseInt(inputs.query.limit_page_length) || outputs.all_transactions_op.data.length;
+
+        if (limitLength === 0) {
+          return filteredTransactions; // Return an empty array if limit is set to 0
+        }
+
+        for (let i = limitStart; i < limitStart + limitLength && i < outputs.all_transactions_op.data.length; i++) {
+          const transaction = outputs.all_transactions_op.data[i];
+          const filteredTransaction = {
+            "customer": transaction.customer,
+            "idx": transaction.idx
+          };
+
+          if (inputs.query.fields) {
+            const requestedFields = inputs.query.fields.split(',');
+            for (const field of requestedFields) {
+              if (transaction.hasOwnProperty(field)) {
+                filteredTransaction[field] = transaction[field];
+              }
+            }
+          }
+
+          filteredTransactions.push(filteredTransaction);
+        }
+
+        return filteredTransactions;
+        %>

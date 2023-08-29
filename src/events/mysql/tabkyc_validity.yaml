@@ -1,0 +1,88 @@
+# ONE
+/mysql/tabkycvalidity/:name.http.get:
+  summary: Fetch tabKYC_Validity
+  description: Fetch tabKYC_Validity from database
+  fn: com.biz.mysql.tabkyc_validity.one
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# CREATE
+/mysql/tabkycvalidity.http.post:
+  summary: Create a new tabKYC_Validity
+  description: Create tabKYC_Validity from database
+  fn: com.biz.mysql.tabkyc_validity.create
+  body:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/mysql/tabKYC_Validity'
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# UPDATE
+/mysql/tabkycvalidity/:name.http.put:
+  summary: Update a tabKYC_Validity
+  description: Update tabKYC_Validity from database
+  fn: com.biz.mysql.tabkyc_validity.update
+  body:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/mysql/tabKYC_Validity'
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# DELETE
+/mysql/tabkycvalidity/:name.http.delete:
+  summary: Delete a tabKYC_Validity
+  description: Delete tabKYC_Validity from database
+  fn: com.biz.mysql.tabkyc_validity.delete
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# SEARCH
+/mysql/tabkycvalidity/search.http.post:
+  summary: Fetch multiple tabKYC_Validity
+  description: Fetch multiple tabKYC_Validity from database
+  fn: com.biz.mysql.tabkyc_validity.search
+  body:
+    content:
+      application/json:
+        schema:
+          type: object
+  responses:
+    content:
+      application/json:
+        schema:
+          type: array
+

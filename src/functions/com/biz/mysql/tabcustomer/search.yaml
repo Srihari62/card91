@@ -1,0 +1,37 @@
+summary: Fetch many tabCustomer
+tasks:
+  - id: all_users_op
+    fn: com.gs.datastore
+    args:
+      datasource: mysql
+      data: <% inputs.body %>
+      config:
+        method: tabCustomer.findMany
+  - id: get_all_id_fullname
+    fn: com.gs.transform
+    args:
+      data: |
+        <js%
+          const filteredUsers = [];
+
+          for (const user of outputs.all_users_op.data) {
+            const filteredUser = {
+              "name": user.name,
+              "full_name": user.full_name,
+              "idx": user.idx
+            };
+
+            if (inputs.query.fields) {
+              const requestedFields = inputs.query.fields.split(',');
+              for (const field of requestedFields) {
+                if (user.hasOwnProperty(field)) {
+                  filteredUser[field] = user[field];
+                }
+              }
+            }
+
+            filteredUsers.push(filteredUser);
+          }
+
+          return filteredUsers;
+        %>

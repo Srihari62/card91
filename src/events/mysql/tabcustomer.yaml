@@ -1,0 +1,161 @@
+# ONE
+/api/resource/customer/:name.http.get:
+  summary: Get a specific customer some fields
+  description: Fetch tabCustomer from database
+  fn: com.biz.mysql.tabcustomer.one
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: fields
+      in: query
+      required: false
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# ACCOUNT_BAL_TRANSACTION_LIM
+/api/resource/customer/:name/account_balance_transaction_limits.http.get:
+  summary: Get customer account balance and transaction limits
+  description: Fetch  from database
+  fn: com.biz.mysql.tab_account_balance_and_transaction_limits.one
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+
+# ACCOUNT_BAL
+/api/resource/customer/:name/accountbalance.http.get:
+  summary: Get customer account balance
+  description: Fetch tabCustomer from database
+  fn: com.biz.mysql.tabaccount_balance.one
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# TRA_LIM
+/api/resource/customer/:name/transactionlimits.http.get:
+  summary: Get customer transaction limits
+  description: Fetch tabCustomer from database
+  fn: com.biz.mysql.tabtransaction_limits.one
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# CREATE
+/api/resource/customer.http.post:
+  summary: Create a new customer
+  description: Create tabCustomer from database
+  fn: com.biz.mysql.tabcustomer.create
+  body:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/mysql/tabCustomer'
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# UPDATE
+/api/resource/customer/:name.http.put:
+  summary: Update a specific customer
+  description: Update tabCustomer from database
+  fn: com.biz.mysql.tabcustomer.update
+  body:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/mysql/tabCustomer'
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# DELETE
+/api/resource/customer/:name.http.delete:
+  summary: Delete a specific customer
+  description: Delete tabCustomer from database
+  fn: com.biz.mysql.tabcustomer.delete
+  params:
+    - name: name
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    content:
+      application/json:
+        schema:
+          type: object
+
+# SEARCH
+/api/resource/customer.http.get:
+  summary: Get a list of customers
+  description: Fetch multiple tabCustomer from database
+  fn: com.biz.mysql.tabcustomer.search
+  params:
+    - name: limit_page_length
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: limit_start
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: fields
+      in: query
+      required: false
+      schema:
+        type: string
+  body:
+    content:
+      application/json:
+        schema:
+          type: object
+  responses:
+    content:
+      application/json:
+        schema:
+          type: array
+

@@ -1,0 +1,46 @@
+summary: Fetch many tabAccount
+tasks:
+  - id: mysql_tabaccount_search
+    fn: com.gs.datastore
+    args:
+      datasource: mysql
+      data: <% inputs.body %>
+      config:
+        method: tabAccount.findMany
+
+  - id: return_req_details 
+    fn: com.gs.transform
+    args:
+      data: |
+        <js%
+          const filteredAccounts = [];
+
+          for (const account of outputs.mysql_tabaccount_search.data) {
+            const filteredAccount = {
+              "account_number": account.account_number,
+              "account_type": account.account_type
+            };
+
+            if (inputs.query.fields) {
+              const requestedFields = inputs.query.fields.split(',');
+              for (const field of requestedFields) {
+                if (user.hasOwnProperty(field)) {
+                  filteredAccount[field] = account[field];
+                }
+              }
+            }
+
+            filteredAccounts.push(filteredAccount);
+          }
+
+          return filteredAccounts;
+        %>
+    
+  #   # args: |
+  #   #   <js% 
+  #   #     let req_details = {
+  #   #       "account_number" : outputs.mysql_tabaccount_search.account_number,
+  #   #       "account_type" : outputs.mysql_tabaccount_search.account_type
+  #   #     }
+  #   #     return req_details
+  #   #   %>
